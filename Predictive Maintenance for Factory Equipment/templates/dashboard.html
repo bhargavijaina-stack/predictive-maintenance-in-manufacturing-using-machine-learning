@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Telemetry Dashboard - Predictive Maintenance</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  </head>
+  <body>
+    <div class="page-wrapper">
+      <div class="page-overlay"></div>
+      
+      <header class="site-header" id="home">
+        <div class="navbar">
+          <a class="brand" href="{{ url_for('index') }}">
+            <span class="brand-icon"><span>P</span></span>
+            <span class="brand-text"><strong>Predictive</strong><span>Maintenance</span></span>
+          </a>
+          <div class="nav-links">
+            <a href="{{ url_for('index') }}"><i class="fa-solid fa-house"></i> Home</a>
+            <a class="active" href="#"><i class="fa-solid fa-chart-line"></i> Dashboard</a>
+            <a href="{{ url_for('logout') }}"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+          </div>
+          <div class="d-flex align-items-center gap-3">
+            <span class="badge bg-success-subtle text-success border border-success-subtle px-3 py-2 rounded-pill"><i class="fa-solid fa-shield-halved"></i> Admin Console</span>
+          </div>
+        </div>
+      </header>
+
+      <main class="main-content">
+        <div class="row mb-4 align-items-center">
+          <div class="col-md-8">
+            <div class="hero-eyebrow">OPERATIONAL OVERVIEW</div>
+            <h2 class="section-title mt-1">Equipment Telemetry & Model Control</h2>
+          </div>
+          <div class="col-md-4 text-md-end mt-3 mt-md-0">
+            <span class="text-muted"><i class="fa-solid fa-user-gear"></i> Logged in as <strong>admin</strong></span>
+          </div>
+        </div>
+
+        <div class="row g-4">
+          <!-- Left Column: Browse Project, Live Sensors and Telemetry Status -->
+          <div class="col-lg-5">
+            <div class="d-flex flex-column gap-4">
+              
+              <!-- NEW: BROWSE PROJECT (AUTOLOAD & PREDICT) PANEL -->
+              <div class="autoload-panel fade-up visible" id="autoload-section">
+                <div class="autoload-header">
+                  <div class="autoload-icon">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i>
+                  </div>
+                  <div class="autoload-title-area">
+                    <h3>Browse Project</h3>
+                    <p>Autoload machine values to test predictions</p>
+                  </div>
+                </div>
+                <p class="text-muted small m-0">Clicking this button automatically fetches a real record from the predictive maintenance historical training dataset, populates the prediction form, and triggers the classification models instantly.</p>
+                <button type="button" class="autoload-btn" id="autoload-trigger">
+                  <i class="fa-solid fa-rotate"></i> Autoload & Predict
+                </button>
+              </div>
+
+              <!-- Realtime Vibration Status & Sensor Readings -->
+              <div class="hero-card fade-up visible" style="min-height: auto; padding: 24px;">
+                <div class="hero-card-head mb-3">
+                  <div class="status-label"><strong>Live Feed Analytics</strong></div>
+                  <span class="risk-pill bg-success-subtle text-success border border-success-subtle px-2 py-1" id="overall-status-pill">
+                    <i class="fa-solid fa-circle-check"></i> Standard
+                  </span>
+                </div>
+                
+                <div class="chart-widget mb-3" style="padding: 16px; border-radius: 20px;">
+                  <div class="chart-top mb-2">
+                    <div class="chart-title">Realtime Vibration Stream</div>
+                    <div class="chart-value" id="current-vibration-val">12.4 mm/s</div>
+                  </div>
+                  <div class="chart-graph" style="height: 100px;">
+                    <svg viewBox="0 0 300 100" preserveAspectRatio="none">
+                      <path id="dynamic-graph-path" d="M10,80 C45,70 60,65 85,78 C110,92 140,50 170,76 C200,82 230,42 260,48 C285,54 295,40 300,28" />
+                    </svg>
+                  </div>
+                </div>
+
+                <div class="sensor-grid">
+                  <div class="sensor-card" style="padding: 12px 16px; border-radius: 16px;">
+                    <span class="sensor-label">Air Temp</span>
+                    <strong id="sensor-air-temp">-- K</strong>
+                  </div>
+                  <div class="sensor-card" style="padding: 12px 16px; border-radius: 16px;">
+                    <span class="sensor-label">Process Temp</span>
+                    <strong id="sensor-proc-temp">-- K</strong>
+                  </div>
+                  <div class="sensor-card" style="padding: 12px 16px; border-radius: 16px;">
+                    <span class="sensor-label">Speed</span>
+                    <strong id="sensor-rpm">-- RPM</strong>
+                  </div>
+                  <div class="sensor-card" style="padding: 12px 16px; border-radius: 16px;">
+                    <span class="sensor-label">Torque</span>
+                    <strong id="sensor-torque">-- Nm</strong>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Streaming Live Feed -->
+              <div class="monitor-card fade-up visible">
+                <div class="panel-header mb-3">
+                  <div>
+                    <span class="panel-title">Live Prediction Feed</span>
+                    <p class="small text-muted">Streaming sensor values from the plant line.</p>
+                  </div>
+                  <span class="status-chip bg-danger-subtle text-danger px-3 py-1 rounded-pill">Live Stream</span>
+                </div>
+                <div id="live-feed" class="feed-list" style="max-height: 380px;"></div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Right Column: Quick Predict Form and Results -->
+          <div class="col-lg-7">
+            <div class="predict-card fade-up visible h-100">
+              <div class="panel-header mb-4">
+                <div>
+                  <span class="panel-title">Diagnostic Model Interface</span>
+                  <p class="small text-muted">Submit machine parameters to evaluate failure predictions.</p>
+                </div>
+              </div>
+
+              <form id="predict-form" class="prediction-form">
+                <div class="row g-3">
+                  <div class="col-md-6">
+                    <label class="form-label text-white small">Product ID</label>
+                    <input list="productIds" name="product_id" id="form-product-id" class="form-control bg-dark border-secondary text-white rounded-3 py-2 px-3" required placeholder="Enter Product ID" />
+                    <datalist id="productIds">
+                      {% for product_id in sample_product_ids %}
+                        <option value="{{ product_id }}"></option>
+                      {% endfor %}
+                    </datalist>
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label text-white small">Machine Quality Type</label>
+                    <select name="type" id="form-type" class="form-select bg-dark border-secondary text-white rounded-3 py-2 px-3" required>
+                      <option value="">Select type</option>
+                      {% for option in product_types %}
+                        <option value="{{ option }}">{{ option }}</option>
+                      {% endfor %}
+                    </select>
+                  </div>
+                </div>
+
+                <div class="row g-3 mt-1">
+                  <div class="col-md-6">
+                    <label class="form-label text-white small">Air Temperature [K]</label>
+                    <input name="air_temp" id="form-air-temp" type="number" step="0.1" class="form-control bg-dark border-secondary text-white rounded-3 py-2 px-3" required placeholder="298.0" />
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label text-white small">Process Temperature [K]</label>
+                    <input name="proc_temp" id="form-proc-temp" type="number" step="0.1" class="form-control bg-dark border-secondary text-white rounded-3 py-2 px-3" required placeholder="308.0" />
+                  </div>
+                </div>
+
+                <div class="row g-3 mt-1">
+                  <div class="col-md-6">
+                    <label class="form-label text-white small">Rotational Speed [rpm]</label>
+                    <input name="rpm" id="form-rpm" type="number" step="1" class="form-control bg-dark border-secondary text-white rounded-3 py-2 px-3" required placeholder="1500" />
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label text-white small">Torque [Nm]</label>
+                    <input name="torque" id="form-torque" type="number" step="0.1" class="form-control bg-dark border-secondary text-white rounded-3 py-2 px-3" required placeholder="45.0" />
+                  </div>
+                </div>
+
+                <div class="row g-3 mt-1">
+                  <div class="col-md-12">
+                    <label class="form-label text-white small">Tool Wear [min]</label>
+                    <input name="tool_wear" id="form-tool-wear" type="number" step="1" class="form-control bg-dark border-secondary text-white rounded-3 py-2 px-3" required placeholder="100" />
+                  </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary mt-4 w-100 py-3 rounded-pill fs-6 fw-bold">
+                  <i class="fa-solid fa-microchip"></i> Run Telemetry Inference
+                </button>
+              </form>
+
+              <div id="prediction-result" class="prediction-result mt-4" style="border: 1px dashed rgba(255,255,255,0.15); min-height: 120px; display: grid; place-items: center; text-align: center;">
+                <span class="text-muted small"><i class="fa-solid fa-circle-question fa-2x mb-2 d-block"></i> No telemetry analyzed yet. Trigger "Browse Project" or submit values manually.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <script>
+      window.liveInterval = {{ live_interval }};
+    </script>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+  </body>
+</html>

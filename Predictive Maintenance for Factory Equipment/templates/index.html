@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Predictive Maintenance in Manufacturing</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+    rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+  <div class="page-wrapper">
+    <div class="page-overlay"></div>
+    <header class="site-header" id="home">
+      <div class="navbar">
+        <a class="brand" href="#home">
+          <span class="brand-icon"><span>P</span></span>
+          <span class="brand-text"><strong>Predictive</strong><span>Maintenance</span></span>
+        </a>
+        <div class="nav-links">
+          <a class="active" href="#home">Home</a>
+          <a href="#about">About Project</a>
+          <a href="#how">How It Works</a>
+          <a href="#features">Key Features</a>
+          <a href="#education">Education</a>
+          {% if logged_in %}
+          <a href="{{ url_for('dashboard') }}"><i class="fa-solid fa-chart-line"></i> Dashboard</a>
+          <a href="{{ url_for('logout') }}"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+          {% else %}
+          <a href="{{ url_for('login') }}"><i class="fa-solid fa-right-to-bracket"></i> Sign In</a>
+          {% endif %}
+        </div>
+        {% if logged_in %}
+        <a href="{{ url_for('dashboard') }}" class="cta-button">Dashboard</a>
+        {% else %}
+        <a href="{{ url_for('login') }}" class="cta-button">Browse Project</a>
+        {% endif %}
+      </div>
+    </header>
+
+    <main class="main-content">
+      <section class="hero-section">
+        <div class="hero-copy fade-up">
+          <div class="hero-eyebrow">MACHINE LEARNING PROJECT</div>
+          <h1 class="hero-title">Predictive Maintenance <span class="highlight">in Manufacturing Using Machine
+              Learning</span></h1>
+          <p class="hero-text">An intelligent system that uses Machine Learning to predict equipment failures before
+            they occur, reduce downtime, and optimize maintenance schedules.</p>
+          <div class="hero-actions">
+            {% if logged_in %}
+            <a href="{{ url_for('dashboard') }}" class="btn btn-primary">Go to Dashboard</a>
+            {% else %}
+            <a href="{{ url_for('login') }}" class="btn btn-primary">Browse Project</a>
+            {% endif %}
+            <a href="#education" class="btn btn-secondary">Learn More</a>
+          </div>
+        </div>
+
+        <div class="hero-card fade-up">
+          <div class="hero-card-head">
+            <div class="status-label"><strong>Equipment Status</strong></div>
+            <span class="risk-pill"><i class="fa-solid fa-triangle-exclamation"></i> High Risk</span>
+          </div>
+          <div class="monitor-panel">
+            <div class="machine-status">
+              <div class="label">Industrial Motor</div>
+              <div class="machine-preview">
+                <div class="machine-graphic">
+                  <div class="machine-piece"></div>
+                  <div class="machine-label">AI Motor</div>
+                </div>
+              </div>
+            </div>
+            <div class="chart-widget">
+              <div class="chart-top">
+                <div class="chart-title">Realtime Vibration</div>
+                <div class="chart-value">15.7 mm/s</div>
+              </div>
+              <div class="chart-graph">
+                <svg viewBox="0 0 300 140" preserveAspectRatio="none">
+                  <path
+                    d="M10,110 C45,90 60,75 85,88 C110,102 140,70 170,86 C200,102 230,62 260,68 C285,74 295,50 300,38" />
+                </svg>
+              </div>
+              <div class="sensor-grid">
+                <div class="sensor-card">
+                  <span class="sensor-label">Temperature</span>
+                  <strong>298.6 K</strong>
+                </div>
+                <div class="sensor-card">
+                  <span class="sensor-label">Vibration</span>
+                  <strong>15.7 mm/s</strong>
+                </div>
+                <div class="sensor-card">
+                  <span class="sensor-label">Speed</span>
+                  <strong>1570 RPM</strong>
+                </div>
+                <div class="sensor-card">
+                  <span class="sensor-label">Health</span>
+                  <strong>24%</strong>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="bio-panel">
+            <div class="bio-pill">
+              <span>Realtime load</span>
+              <strong>High</strong>
+            </div>
+            <div class="bio-pill">
+              <span>Maintenance</span>
+              <strong>Critical</strong>
+            </div>
+            <div class="bio-pill">
+              <span>Alert level</span>
+              <strong>Red</strong>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="monitor-section fade-up" id="monitor">
+        <div class="section-headline">
+          <span class="dot"></span>
+          <div>
+            <p class="section-label">Telemetry Showcase</p>
+            <h2 class="section-title">Realtime analytics & live prediction</h2>
+          </div>
+        </div>
+        {% if logged_in %}
+        <div class="dashboard-teaser-card">
+          <div class="dashboard-teaser-icon"><i class="fa-solid fa-chart-line"></i></div>
+          <h3>Telemetry Dashboard Active</h3>
+          <p>You are signed in as administrator. Access live factory sensor streams, predictive maintenance alerts, and
+            explainable AI insights.</p>
+          <a href="{{ url_for('dashboard') }}" class="btn btn-primary">Go to Dashboard</a>
+        </div>
+        {% else %}
+        <div class="dashboard-teaser-card">
+          <div class="dashboard-teaser-icon"><i class="fa-solid fa-lock"></i></div>
+          <h3>Telemetry Dashboard Secured</h3>
+          <p>Sign in to view real-time factory telemetry, equipment speed indicators, vibration charts, and run instant
+            AI prediction workloads.</p>
+          <a href="{{ url_for('login') }}" class="btn btn-primary">Sign In to Dashboard</a>
+        </div>
+        {% endif %}
+      </section>
+
+      <section class="about-section fade-up" id="about">
+        <div class="section-headline">
+          <span class="dot"></span>
+          <div>
+            <p class="section-label">About Predictive Maintenance</p>
+            <h2 class="section-title">About Predictive Maintenance</h2>
+          </div>
+        </div>
+        <div class="about-card">
+          <p>Predictive Maintenance leverages real-time sensor data and historical records to analyze equipment behavior
+            and predict potential failures using Machine Learning algorithms. This proactive approach helps industries
+            save costs, improve productivity, and extend equipment lifespan.</p>
+        </div>
+      </section>
+
+      <section class="how-section fade-up" id="how">
+        <div class="section-headline">
+          <span class="dot"></span>
+          <div>
+            <p class="section-label">How It Works</p>
+            <h2 class="section-title">Intelligent monitoring made simple</h2>
+          </div>
+        </div>
+        <div class="feature-grid">
+          <div class="feature-card">
+            <span class="feature-icon"><i class="fa-solid fa-signal-stream"></i></span>
+            <h4>Sensor aggregation</h4>
+            <p>Collect multiple equipment signals and unify them into a single operating profile.</p>
+          </div>
+          <div class="feature-card">
+            <span class="feature-icon"><i class="fa-solid fa-gear"></i></span>
+            <h4>Model inference</h4>
+            <p>Run predictions continuously using the trained machine learning model.</p>
+          </div>
+          <div class="feature-card">
+            <span class="feature-icon"><i class="fa-solid fa-bolt"></i></span>
+            <h4>Actionable alerts</h4>
+            <p>Trigger maintenance actions before failures impact production.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="features-section fade-up" id="features">
+        <div class="section-headline">
+          <span class="dot"></span>
+          <div>
+            <p class="section-label">Key Features</p>
+            <h2 class="section-title">What makes it premium</h2>
+          </div>
+        </div>
+        <div class="feature-grid">
+          <div class="feature-card">
+            <span class="feature-icon"><i class="fa-solid fa-shield-halved"></i></span>
+            <h4>Prevent Downtime</h4>
+            <p>Detect issues before failure occurs and avoid unexpected downtime.</p>
+          </div>
+          <div class="feature-card">
+            <span class="feature-icon"><i class="fa-solid fa-dollar-sign"></i></span>
+            <h4>Reduce Costs</h4>
+            <p>Optimize maintenance schedules and reduce operational expenses.</p>
+          </div>
+          <div class="feature-card">
+            <span class="feature-icon"><i class="fa-solid fa-tachograph-digital"></i></span>
+            <h4>Improve Efficiency</h4>
+            <p>Maintain optimal performance and increase overall productivity.</p>
+          </div>
+          <div class="feature-card">
+            <span class="feature-icon"><i class="fa-solid fa-rotate-right"></i></span>
+            <h4>Extend Equipment Life</h4>
+            <p>Timely maintenance prevents severe damage and extends equipment lifespan.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="education-section fade-up" id="education">
+        <div class="education-card">
+          <div class="education-copy">
+            <div class="section-headline">
+              <span class="dot"></span>
+              <div>
+                <p class="section-label">Learn. Understand. Implement.</p>
+                <h3>Explore educational resources for predictive maintenance.</h3>
+              </div>
+            </div>
+            <p>Explore educational resources to understand the concepts, algorithms, and real-world impact of Predictive
+              Maintenance in Manufacturing.</p>
+            <a href="#" class="education-action"><i class="fa-solid fa-book-open"></i>&nbsp; Explore Education</a>
+          </div>
+          <div class="education-icon"><i class="fa-solid fa-brain"></i></div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+
+</html>
